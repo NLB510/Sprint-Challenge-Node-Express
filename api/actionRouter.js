@@ -11,7 +11,6 @@ const router = express.Router();
 router.get('/', (req, res) => {
   db.get()
     .then(actions => {
-      console.log(actions)
       res.status(200).json({
         success: true,
         actions
@@ -38,7 +37,6 @@ router.get('/:id', (req, res) => {
           error: "The action with the specified ID does not exist"
         })
       } else {
-        console.log(actions)
         res.status(200).json({
           success: true,
           actions
@@ -54,6 +52,31 @@ router.get('/:id', (req, res) => {
 })
 
 // POST
+
+router.post("/", (req, res) => {
+  const { project_id, notes, description  } = req.body;
+  const newAction = req.body;
+
+  if (!project_id || !description || !notes) {
+    return res.status(400).json({
+      errorMessage: "Please provide a project id, notes, and description for the action"
+    });
+  }
+
+  db.insert(newAction)
+    .then(action => {
+      res.status(201).json({
+        success: true,
+        action
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        success: false,
+        error: "There was an error while saving the action to the database"
+      })
+    });
+});
 
 // PUT
 
