@@ -26,7 +26,7 @@ router.get("/", (req, res) => {
     });
 });
 
-// GET PROJECT BY ID
+// GET: PROJECT BY ID
 
 router.get("/:id", (req, res) => {
   const id = req.params.id;
@@ -53,6 +53,37 @@ router.get("/:id", (req, res) => {
       });
     });
 });
+
+
+// GET: ACTIONS BY PROJECT
+
+router.get('/actions/:id', (req, res) => {
+  const id = req.params.id
+
+  db.getProjectActions(id)
+  .then(actions => {
+    if (actions.length === 0) {
+      return res.status(404).json({
+        success: false, 
+        errorMessage: "The project with the specified Id does not exist."
+      })
+    } else {
+      res.status(200).json({
+        success: true,
+        actions
+      })
+    }
+  })
+  .catch(err => {
+    res.status(500).json({
+      success: false,
+      error: "The projects could not be retrieved"
+    });
+  })
+
+})
+
+
 
 // POST
 
